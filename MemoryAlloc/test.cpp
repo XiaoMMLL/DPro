@@ -1,0 +1,37 @@
+// TestSuite::Test.cpp
+#include "test.h"
+#include <typeinfo>
+
+using namespace std;
+using namespace TestSuite;
+
+void Test::do_test(bool cond, const string& lbl, const char* fname, long lineno)
+{
+	if (!cond)
+	{
+		do_fail(lbl, fname, lineno);
+	}
+	else
+	{
+		succeed_();
+	}
+}
+
+void Test::do_fail(const string& lbl, const char* fname, long lineno)
+{
+	++nFail;
+	if (osptr)
+	{
+		*osptr << typeid(*this).name() << "failure:(" << lbl << "), " << fname << " (line " << lineno << ")" << endl;
+	}
+}
+
+long Test::report() const
+{
+	if (osptr)
+	{
+        *osptr << "Test \"" << typeid(*this).name() << "\": Passed:" << nPass << ", Failed:" << nFail << endl;
+	}
+	return nFail;
+}
+
